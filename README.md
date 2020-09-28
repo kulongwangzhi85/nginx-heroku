@@ -2,6 +2,7 @@
 
 ## 概述
 
+该仓库fork至https://github.com/bclswl0827/v2ray-heroku，感谢大神的分享
 用于在 Heroku 上部署 V2Ray Websocket。
 
 **Heroku 为我们提供了免费的容器服务，我们不应该滥用它，所以本项目不宜做为长期翻墙使用。**
@@ -14,7 +15,7 @@
 
 本镜像不会因为大量占用资源而被封号。
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://dashboard.heroku.com/new?template=https%3A%2F%2Fgithub.com%2Fbclswl0827%2Fv2ray-heroku)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://dashboard.heroku.com/new?template=https%3A%2F%2Fgithub.com%2Fkulongwangzhi85%2Fv2ray-abc)
 
 ## ENV 设定
 
