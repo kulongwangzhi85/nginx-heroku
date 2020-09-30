@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
+    <meta name="description" content="[TOC] 该部署笔记以部署 PHP 应用为例. &amp;quot;官方文档&amp;quot; 1. 设置 1.1 环境依赖 以部署 PHP 应用为例, 本地环境依赖: php composer Heroku 使" />
+    <meta property="og:description" content="[TOC] 该部署笔记以部署 PHP 应用为例. &amp;quot;官方文档&amp;quot; 1. 设置 1.1 环境依赖 以部署 PHP 应用为例, 本地环境依赖: php composer Heroku 使" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>[原创]Heroku简单部署指南 - 嘉兴Xing - 开发者的网上家园</title>
+    <link id="favicon" rel="shortcut icon" href="//common.cnblogs.com/favicon.svg" type="image/svg+xml" />
+    
+    <link rel="stylesheet" href="/css/blog-common.min.css?v=dktCmaTYc_s0a4EnvC6tuH5wYElIJN_131iOybZOKro" />
+    
+    <link type="text/css" rel="stylesheet" href="https://www.cnblogs.com/youjiaxing/custom.css?v=sBJTgfqJzGsdwz5ikEstQN9kevc=" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/SimpleMemory/bundle-SimpleMemory-mobile.min.css" />
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/youjiaxing/rss" />
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/youjiaxing/rsd.xml" />
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/youjiaxing/wlwmanifest.xml" />
+    <script>
+        var currentBlogId = 478225;
+        var currentBlogApp = 'youjiaxing';
+        var cb_enable_mathjax = false;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'SimpleMemory';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2019-01-23 06:11';
+        </script>
+    <script src="https://common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+    <script src="/js/blog-common.min.js?v=quLP6V96NCUwrp9e9p4Tc3ZzspjwpbJyGVOAQHoms5M"></script>
+    
+    
+    
+</head>
+<body>
+    <a name="top"></a>
+    <div id="top_nav" class="navbar navbar-custom">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding">
+                    <a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM" alt="博客园Logo" /></a>
+                </li>
+                <li><a href="/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-sitehome')">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-news')">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-q')">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-brands')">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-ing')">闪存</a></li>
+                <li><a href="https://edu.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-edu')">班级</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3" />
+                        <button type="submit" id="zzk_search_button">
+                            <img src="/images/aggsite/search.svg" alt="搜索" />
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客">
+                        <img id="myblog_icon" class="navbar-icon" src="/images/aggsite/myblog.svg" alt="我的博客" />
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息">
+                        <img id="msg_icon" class="navbar-icon" src="/images/aggsite/message.svg?v=oS4PkibyMjZ9rGD5XAcLt99uW_s76Javy2up4dbnZNY" alt="短消息" />
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="/images/aggsite/avatar-default.svg" alt="用户头像" />
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/">注册</a>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signin/?returnUrl=https://www.cnblogs.com/">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+    
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+        <a id="lnkBlogLogo" href="https://www.cnblogs.com/youjiaxing/"><img id="blogLogo" src="/skins/custom/images/logo.gif" alt="返回主页" /></a>		
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/youjiaxing/">影落风随</a>
+</h1>
+<h2>
+
+</h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/youjiaxing/">
+首页</a>
+</li>
+<li>
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+</li>
+<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/%E5%98%89%E5%85%B4Xing">
+联系</a></li>
+<li>
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/youjiaxing/rss/">
+订阅</a>
+<!--<partial name="./Shared/_XmlLink.cshtml" model="Model" /></li>--></li>
+<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+
+		<div class="blogStats">
+			
+			<span id="stats_post_count">随笔 - 
+22&nbsp; </span>
+<span id="stats_article_count">文章 - 
+3&nbsp; </span>
+<span id="stats-comment_count">评论 - 
+0</span>
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="post_detail">
+    <!--done-->
+    <div id="topics">
+        <div class="post">
+            <h1 class = "postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/youjiaxing/p/10310591.html">
+    <span>[原创]Heroku简单部署指南</span>
+    
+
+
+</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+<div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+    <p></p><div class="toc"><div class="toc-container-header">目录</div><ul><li><a href="#1-设置">1. 设置</a><ul><li><a href="#11-环境依赖">1.1 环境依赖</a></li><li><a href="#12-heroku-客户端安装">1.2 Heroku 客户端安装</a></li><li><a href="#13-登录">1.3 登录</a></li></ul></li><li><a href="#2-应用">2. 应用</a><ul><li><a href="#21-创建">2.1 创建</a></li><li><a href="#22-查看日志">2.2 查看日志</a></li><li><a href="#23-附加组件">2.3 附加组件</a></li><li><a href="#24-交互式-shell">2.4 交互式 Shell</a></li><li><a href="#25-定义-配置变量">2.5 定义 配置变量</a></li><li><a href="#26-配置数据库">2.6 配置数据库</a></li><li><a href="#27-procfile">2.7 Procfile</a></li></ul></li></ul></div><p></p>
+<p>该部署笔记以部署 PHP 应用为例.</p>
+<p><a href="https://devcenter.heroku.com/categories/reference">官方文档</a></p>
+<h1 id="1-设置">1. 设置</h1>
+<h2 id="11-环境依赖">1.1 环境依赖</h2>
+<p>以部署 PHP 应用为例, 本地环境依赖:</p>
+<ul>
+<li>
+<p>php</p>
+</li>
+<li>
+<p>composer</p>
+<blockquote>
+<p>Heroku 使用 Composer 管理PHP应用的依赖, <code>composer.json</code> 用于表明项目是 php语言.</p>
+</blockquote>
+</li>
+<li>
+<p>git</p>
+</li>
+</ul>
+<p>分别执行以下命令查看当前版本</p>
+<pre><code>php -v
+composer -v
+git --version
+</code></pre>
+<h2 id="12-heroku-客户端安装">1.2 Heroku 客户端安装</h2>
+<p><a href="http://heroku.com">下载安装 Heroku Cli</a></p>
+<p>顺便官网注册一个 heroku 账号</p>
+<h2 id="13-登录">1.3 登录</h2>
+<pre><code class="language-sh">heroku login	# 输入 heroku 账号密码
+heroku keys:add # 添加ssh公钥到 Heroku 上
+</code></pre>
+<h1 id="2-应用">2. 应用</h1>
+<h2 id="21-创建">2.1 创建</h2>
+<pre><code class="language-sh">heroku create	# 远程创建新的 heroku app, 并在本地 git 添加对应的远程 git 仓库
+
+# git init
+
+git push heroku master	# git 推送到远程仓库
+
+heroku ps		# 查看当前应用有几个实例
+heroku ps:scale	web:1 # 应用实例伸缩, "web" 是在 Procfile 中定义的对应应用
+
+heroku open		# 在浏览器中打开实例
+</code></pre>
+<p>免费账号只能有一个实例</p>
+<h2 id="22-查看日志">2.2 查看日志</h2>
+<pre><code>heroku logs --tail
+</code></pre>
+<p>此处的日志是由应用输出到 <code>stdout</code> 和 <code>stderr</code> 中的内容.</p>
+<h2 id="23-附加组件">2.3 <a href="https://devcenter.heroku.com/categories/reference#add-ons">附加组件</a></h2>
+<p>为防止滥用, 添加附加组件需要账号认证</p>
+<blockquote>
+<p>...信用卡的意思</p>
+</blockquote>
+<pre><code class="language-sh">heroku addons				# 查看已安装的附加组件
+heroku addons:create xxxx	# 安装附加组件
+heroku addons:open xxxx		# 打开附加组件的web管理页面(如果有的话...)
+</code></pre>
+<h2 id="24-交互式-shell">2.4 交互式 Shell</h2>
+<p>可运行 PHP 的交互式 shell</p>
+<p><code>heroku run "php -a"</code></p>
+<p>heroku 的交互式 shell</p>
+<p><code>heroku run bash</code></p>
+<h2 id="25-定义-配置变量">2.5 定义 <a href="https://devcenter.heroku.com/articles/config-vars">配置变量</a></h2>
+<p>config vars(配置变量) 在应用运行时是以 环境变量 形式暴露给应用.</p>
+<pre><code class="language-sh">heroku config	# 查看当前配置变量
+heroku config:set XXX=XXXX	# 定义配置变量
+</code></pre>
+<p><code>$_SERVER</code> 的输出, 若执行 <code>heroku config:set TEST_VAR=20</code>, 则会在下面输出出来(Line: 10)</p>
+<pre><code class="language-php">array (
+  'COMPOSER_BIN_DIR' =&gt; 'vendor/bin',
+  'DOCUMENT_ROOT' =&gt; '/app/web',
+  'HEROKU_PHP_HTTPD_CONFIG_INCLUDE' =&gt; '/app/vendor/heroku/heroku-buildpack-php/conf/apache2/default_include.conf',
+  'DYNO' =&gt; 'web.1',
+  'PATH' =&gt; '/app/.heroku/php/bin:/app/.heroku/php/sbin:/app/.heroku/php/bin:/app/.heroku/php/sbin:/app/.heroku/php/bin:/app/.heroku/php/sbin:/app/.heroku/php/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/bin',
+  'WEB_CONCURRENCY' =&gt; '4',
+  'PWD' =&gt; '/app',
+  'COMPOSER_VENDOR_DIR' =&gt; 'vendor',
+  'TEST_VAR' =&gt; '20',
+  'HOME' =&gt; '/app',
+  'SHLVL' =&gt; '2',
+  'PORT' =&gt; '11636',
+  'HEROKU_APP_DIR' =&gt; '/app',
+  '_' =&gt; '/app/.heroku/php/sbin/php-fpm',
+  'USER' =&gt; 'u24320',
+  'SCRIPT_NAME' =&gt; '/index.php',
+  'REQUEST_URI' =&gt; '/_server',
+  'QUERY_STRING' =&gt; '',
+  'REQUEST_METHOD' =&gt; 'GET',
+  'SERVER_PROTOCOL' =&gt; 'HTTP/1.1',
+  'GATEWAY_INTERFACE' =&gt; 'CGI/1.1',
+  'REDIRECT_URL' =&gt; '/_server',
+  'REMOTE_PORT' =&gt; '12702',
+  'SCRIPT_FILENAME' =&gt; '/app/web/index.php',
+  'SERVER_ADMIN' =&gt; 'you@example.com',
+  'CONTEXT_DOCUMENT_ROOT' =&gt; '/app/web',
+  'CONTEXT_PREFIX' =&gt; '',
+  'REQUEST_SCHEME' =&gt; 'http',
+  'REMOTE_ADDR' =&gt; '10.43.233.16',
+  'SERVER_PORT' =&gt; '80',
+  'SERVER_ADDR' =&gt; '172.17.77.62',
+  'SERVER_NAME' =&gt; 'polar-oasis-94232.herokuapp.com',
+  'SERVER_SOFTWARE' =&gt; 'Apache',
+  'SERVER_SIGNATURE' =&gt; '',
+  'HTTP_TOTAL_ROUTE_TIME' =&gt; '0',
+  'HTTP_X_REQUEST_START' =&gt; '1529897835941',
+  'HTTP_CONNECT_TIME' =&gt; '1',
+  'HTTP_VIA' =&gt; '1.1 vegur',
+  'HTTP_X_FORWARDED_PORT' =&gt; '443',
+  'HTTP_X_FORWARDED_PROTO' =&gt; 'https',
+  'HTTP_X_FORWARDED_FOR' =&gt; '218.66.157.218',
+  'HTTP_X_REQUEST_ID' =&gt; '775b1b7c-c679-44d6-9cf0-2280f2930b15',
+  'HTTP_ACCEPT_LANGUAGE' =&gt; 'zh-CN,zh;q=0.9',
+  'HTTP_ACCEPT_ENCODING' =&gt; 'gzip, deflate, br',
+  'HTTP_ACCEPT' =&gt; 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'HTTP_USER_AGENT' =&gt; 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
+  'HTTP_UPGRADE_INSECURE_REQUESTS' =&gt; '1',
+  'HTTP_CONNECTION' =&gt; 'close',
+  'HTTP_HOST' =&gt; 'polar-oasis-94232.herokuapp.com',
+  'REDIRECT_STATUS' =&gt; '200',
+  'FCGI_ROLE' =&gt; 'RESPONDER',
+  'PHP_SELF' =&gt; '/index.php',
+  'REQUEST_TIME_FLOAT' =&gt; 1529897835.9442799,
+  'REQUEST_TIME' =&gt; 1529897835,
+)
+</code></pre>
+<h2 id="26-配置数据库">2.6 配置数据库</h2>
+<p><a href="https://elements.heroku.com/addons/categories/data-stores">附加组件市场</a> 有大量免费的数据存储附加组件.</p>
+<blockquote>
+<p>免费的基本都是限制存储量, eg. postgresql 免费的限制存储 10000 行</p>
+</blockquote>
+<pre><code class="language-sh">heroku addons:create heroku-postgresql:hobby-dev	# 添加 postgresql 的免费版
+</code></pre>
+<p>添加上述数据库组件后, 会往变量配置中添加如下数据库url地址:</p>
+<p><img src="https://img2018.cnblogs.com/blog/387576/201901/387576-20190123181020003-1751497355.png" alt="" loading="lazy"></p>
+<blockquote>
+<p>使用: <code>$dbopts = parse_url(getenv('DATABASE_URL'));</code></p>
+</blockquote>
+<p>远程连接 postgressql</p>
+<pre><code>heroku pg:psql
+</code></pre>
+<h2 id="27-procfile">2.7 Procfile</h2>
+<p><code>Procfile</code> 文件用于定义进程类型并确定应用如何启动.</p>
+<pre><code># apache
+web: vendor/bin/heroku-php-apache2 web/		# web/ 是指定应用的根目录
+
+# nginx
+web: vendor/bin/heroku-php-nginx web/		
+</code></pre>
+
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+    <div id="blog_post_info"></div>
+    <div class="clear"></div>
+    <div id="post_next_prev"></div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2019-01-23 18:11</span>&nbsp;
+<a href="https://www.cnblogs.com/youjiaxing/">嘉兴Xing</a>&nbsp;
+阅读(<span id="post_view_count">654</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=10310591" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(10310591);return false;">收藏</a></div>
+        </div>
+	    
+	    
+    </div><!--end: topics 文章、评论容器-->
+</div>
+<script src="https://common.cnblogs.com/highlight/9.12.0/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 478225, cb_blogApp = 'youjiaxing', cb_blogUserGuid = '482dfcee-8b6f-e111-aa3f-842b2b196315';
+    var cb_entryId = 10310591, cb_entryCreatedDate = '2019-01-23 18:11', cb_postType = 1;
+    loadViewCount(cb_entryId);
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container"></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id='div-gpt-ad-1592365906576-0' style='width: 300px; height: 250px;'></div>
+    </div>
+    <div id="under_post_news"></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id='div-gpt-ad-1592366332455-0' style='width: 468px; height: 60px;'></div>
+    </div>
+    <div id="under_post_kb"></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+        fixPostBody();
+        deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);        deliverT2();
+        deliverC1C2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div>
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<div id="sidebar_news" class="newsItem">
+            <script>loadBlogNews();</script>
+</div>
+
+<div id="sidebar_ad"></div>
+			<div id="blog-calendar" style="display:none"></div><script>loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div>
+                    <script>loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright &copy; 2020 嘉兴Xing
+<br /><span id="poweredby">Powered by .NET Core on Kubernetes</span>
+
+
+
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+    
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?39b794a97f47c65b6b2e4e1741dcba38";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+</body>
+</html>

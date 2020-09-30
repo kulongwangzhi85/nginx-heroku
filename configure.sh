@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cat << EOF > /etc/nginx/nginx.conf
+cat << EOF > /etc/nginx/sites-enabled/aaa.conf
 server {
     listen {$PORT} ssl;
     server_name {$servername}
@@ -11,8 +11,8 @@ server {
     ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
     ssl_prefer_server_ciphers on;
     location / {
-        root  /usr/share/nginx/html/admin;
-        index  index.html index.htm;
+        root  /nginx/html/;
+        index  index.html;
     }
     location /admin {
 	proxy_pass http://127.0.0.1:2222/;
@@ -21,3 +21,5 @@ server {
     }
 }
 EOF
+cat /etc/nginx/nginx.conf
+cat /etc/nginx/sites-enabled/aaa.conf
