@@ -17,8 +17,6 @@ server {
     location /admin {
 	proxy_pass http://127.0.0.1:2222/;
     }
-	
-    }
 }
 EOF
 cat /etc/nginx/nginx.conf
