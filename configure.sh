@@ -1,6 +1,8 @@
 #!/bin/sh
 
-cat << EOF > /etc/nginx/conf.d/aaa.conf
+sed -n '/listen/ s/80/\$PORT/p' /etc/nginx/conf.d/default.conf
+
+cat << EOF >> /etc/nginx/conf.d/default.conf
 server {
     listen $PORT ;
     server_name "$SERVERNAME" ;
@@ -20,5 +22,5 @@ server {
 }
 EOF
 cat /etc/nginx/nginx.conf
-cat /etc/nginx/conf.d/aaa.conf
+cat /etc/nginx/conf.d/default.conf
 exec nginx -c /etc/nginx/nginx.conf
