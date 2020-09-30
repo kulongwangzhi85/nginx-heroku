@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cat << EOF > /etc/nginx/sites-enabled/aaa.conf
+cat << EOF > /etc/nginx/conf.d/aaa.conf
 server {
     listen {$PORT} ssl;
     server_name {$servername}
@@ -22,4 +22,4 @@ server {
 }
 EOF
 cat /etc/nginx/nginx.conf
-cat /etc/nginx/sites-enabled/aaa.conf
+cat /etc/nginx/conf.d/aaa.conf
