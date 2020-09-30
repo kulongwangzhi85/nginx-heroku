@@ -4,5 +4,5 @@ ADD configure.sh /configure.sh
 
 ADD index.html /nginx/html/index.html
 RUN chmod +x /configure.sh
-RUN /configure.sh
+CMD /configure.sh
 
