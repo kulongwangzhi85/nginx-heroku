@@ -3,7 +3,7 @@
     "description": "Deploy Nginx on Heroku.",
     "keywords": ["Nginx"],
     "env": {
-        "Server Name": {
+        "servername": {
             "description": "Server Name",
             "value": "nginx-app0.herokuapp.com"
         }
