@@ -2,7 +2,7 @@
 
 cat << EOF > /etc/nginx/conf.d/aaa.conf
 server {
-    listen ${PORT} ssl;
+    listen $PORT ssl;
     server_name ${servername}
     #ssl_certificate     /etc/nginx/conf.d/certs/xxxx.pem;
     #ssl_certificate_key /etc/nginx/conf.d/certs/xxxx.key;
