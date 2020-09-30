@@ -3,7 +3,7 @@
 cat << EOF > /etc/nginx/conf.d/aaa.conf
 server {
     listen $PORT ssl;
-    server_name "$SERVERNAME";
+    server_name "$SERVERNAME" ;
     #ssl_certificate     /etc/nginx/conf.d/certs/xxxx.pem;
     #ssl_certificate_key /etc/nginx/conf.d/certs/xxxx.key;
     ssl_session_timeout 5m;
@@ -23,4 +23,4 @@ server {
 EOF
 cat /etc/nginx/nginx.conf
 cat /etc/nginx/conf.d/aaa.conf
-exec nginx -g daemon
+exec nginx -c /etc/nginx/nginx.conf
