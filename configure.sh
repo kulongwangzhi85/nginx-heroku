@@ -23,4 +23,4 @@ server {
 EOF
 cat /etc/nginx/nginx.conf
 cat /etc/nginx/conf.d/aaa.conf
-exec nginx -g daemon off
+exec nginx -g daemon
